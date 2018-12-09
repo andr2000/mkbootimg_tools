@@ -139,10 +139,11 @@ if [ ! -z $mkboot_from_dir ]; then
     [ -z $dtb_size ] && dtb_size=0
     if [ -d $ramdisk ]; then
         [ -z $format ] && format=gzip
-        zip_command $format
-        #cd $ramdisk; find . | fakeroot cpio -R 0:0 -H newc -o 2>/dev/null \
-        #    | $zcommand > $unpacked_dir/new_ramdisk; cd $unpacked_dir
-        $mkbootfs $ramdisk | $zcommand > new_ramdisk
+        #zip_command $format
+        zcommand="gzip -9 -n"
+        cd $ramdisk; find . | cpio -R 0:0 -H newc -o 2>/dev/null \
+            | $zcommand > $unpacked_dir/new_ramdisk; cd $unpacked_dir
+        #$mkbootfs $ramdisk | $zcommand > new_ramdisk
         ramdisk=new_ramdisk
         ramdisk_size=$(stat -c "%s" $ramdisk)
     fi
